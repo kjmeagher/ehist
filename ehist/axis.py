@@ -88,15 +88,13 @@ class LogIntAxis:
     integer.
     """
 
-    def bin_spacing(self, points, bins, range_):
+    def bin_spacing(self, points, bins, span):
 
-        if range_ is None:
-            range_ = [int(np.min(points)), int(np.max(points))]
+        if span is None:
+            span = [int(np.min(points)), int(np.max(points))]
 
-        if np.isscalar(bins):
-            self.bins = geomspace_int(range_[0], range_[1], bins)
-        else:
-            self.bins = bins
+        assert np.isscalar(bins)
+        self.bins = geomspace_int(span[0], span[1], bins)
 
     def finish(self):
         assert np.issubdtype(self.bins.dtype.type, np.integer)
@@ -113,10 +111,10 @@ class LogIntAxis:
 
 
 class LinearAxis:
-    def bin_spacing(self, points, bins, range_):
-        if range_ is None:
-            range_ = [np.min(points), np.max(points)]
-        self.bins = np.linspace(range_[0], range_[1], bins + 1)
+    def bin_spacing(self, points, bins, span):
+        if span is None:
+            span = [np.min(points), np.max(points)]
+        self.bins = np.linspace(span[0], span[1], bins + 1)
 
     def finish(self):
         self.edges = self.bins
@@ -134,10 +132,10 @@ class LinearAxis:
 
 
 class LogAxis:
-    def bin_spacing(self, points, bins, range_):
-        if range_ is None:
-            range_ = [np.min(points[points > 0]), np.max(points)]
-        self.bins = np.geomspace(range_[0], range_[1], bins + 1)
+    def bin_spacing(self, points, bins, span):
+        if span is None:
+            span = [np.min(points[points > 0]), np.max(points)]
+        self.bins = np.geomspace(span[0], span[1], bins + 1)
 
     def finish(self):
         self.edges = self.bins
@@ -155,18 +153,18 @@ class LogAxis:
 
 
 class ZenithAxis:
-    def bin_spacing(self, points, bins, range_):
-        if range_ is None:
-            range_ = [np.min(points), np.max(points)]
+    def bin_spacing(self, points, bins, span):
+        if span is None:
+            span = [np.min(points), np.max(points)]
         # coerse the values to common edges
-        if range_[0] < 0.1:
-            range_[0] = 0
-        if range_[1] >= np.pi / 2 - 0.1 and range_[1] <= np.pi / 2:
-            range_[1] = np.pi / 2
-        if range_[1] >= np.pi - 0.1 and range_[1] <= np.pi:
-            range_[1] = np.pi
+        if span[0] < 0.1:
+            span[0] = 0
+        if span[1] >= np.pi / 2 - 0.1 and span[1] <= np.pi / 2:
+            span[1] = np.pi / 2
+        if span[1] >= np.pi - 0.1 and span[1] <= np.pi:
+            span[1] = np.pi
 
-        self.range = range_
+        self.range = span
         self.cosbins = np.linspace(np.cos(self.range[0]), np.cos(self.range[1]), bins + 1)
         self.bins = np.arccos(self.cosbins)
 
@@ -195,7 +193,7 @@ class ZenithAxis:
         return np.cos(np.linspace(self.bins[0], self.bins[-1], 100))
 
 
-def AutoAxis(points, bins, range_, t):
+def AutoAxis(points, bins=None, span=None, t=None):
 
     points = np.asarray(points)
 
@@ -220,6 +218,8 @@ def AutoAxis(points, bins, range_, t):
     else:
         raise ValueError
 
+    if bins is None:
+        bins = 64
     if isinstance(bins, str):
         if bins == "blocks":
             bins = bayesian_blocks(points)
@@ -231,13 +231,11 @@ def AutoAxis(points, bins, range_, t):
             _, bins = freedman_bin_width(points, True)
         else:
             raise ValueError(f"unrecognized bin code: '{bins}'")
-    elif bins is None:
-        bins = 64
 
     if np.isscalar(bins):
-        ax.bin_spacing(points, bins, range_)
+        ax.bin_spacing(points, bins, span)
     else:
-        ax.bins = bins
+        ax.bins = np.asarray(bins)
 
     ax.finish()
     return ax
