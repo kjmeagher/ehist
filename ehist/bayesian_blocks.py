@@ -1,9 +1,12 @@
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
 # pylint: skip-file
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
-"""
-Bayesian Blocks for Time Series Analysis
-========================================
+"""Bayesian Blocks for Time Series Analysis
+========================================.
 
 Dynamic programming algorithm for solving a piecewise-constant model for
 various datasets. This is based on the algorithm presented in Scargle
@@ -43,8 +46,6 @@ from inspect import signature
 
 import numpy as np
 
-# from astropy.utils.exceptions import AstropyUserWarning
-
 # TODO: implement other fitness functions from appendix B of Scargle 2012
 
 # __all__ = ['FitnessFunc', 'Events', 'RegularEvents', 'PointMeasures',
@@ -52,7 +53,7 @@ import numpy as np
 
 
 def bayesian_blocks(t, x=None, sigma=None, fitness="events", **kwargs):
-    r"""Compute optimal segmentation of data with Scargle's Bayesian Blocks
+    r"""Compute optimal segmentation of data with Scargle's Bayesian Blocks.
 
     This is a flexible implementation of the Bayesian Blocks algorithm
     described in Scargle 2012 [1]_.
@@ -102,7 +103,6 @@ def bayesian_blocks(t, x=None, sigma=None, fitness="events", **kwargs):
 
     Examples
     --------
-
     .. testsetup::
 
         >>> np.random.seed(12345)
@@ -161,7 +161,7 @@ def bayesian_blocks(t, x=None, sigma=None, fitness="events", **kwargs):
 
 
 class FitnessFunc:
-    """Base class for bayesian blocks fitness functions
+    """Base class for bayesian blocks fitness functions.
 
     Derived classes should overload the following method:
 
@@ -197,7 +197,7 @@ class FitnessFunc:
        https://ui.adsabs.harvard.edu/abs/2013ApJ...764..167S
     """
 
-    def __init__(self, p0=0.05, gamma=None, ncp_prior=None):
+    def __init__(self, p0=0.05, gamma=None, ncp_prior=None) -> None:
         self.p0 = p0
         self.gamma = gamma
         self.ncp_prior = ncp_prior
@@ -235,10 +235,7 @@ class FitnessFunc:
             else:
                 sigma = 1
 
-            if len(unq_t) == len(t):
-                x = np.ones_like(t)
-            else:
-                x = np.bincount(unq_inv)
+            x = np.ones_like(t) if len(unq_t) == len(t) else np.bincount(unq_inv)
 
             t = unq_t
 
@@ -267,12 +264,11 @@ class FitnessFunc:
         return t, x, sigma
 
     def fitness(self, **kwargs):
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def p0_prior(self, N):
-        """
-        Empirical prior, parametrized by the false alarm probability ``p0``
-        See  eq. 21 in Scargle (2012)
+        """Empirical prior, parametrized by the false alarm probability ``p0``
+        See  eq. 21 in Scargle (2012).
 
         Note that there was an error in this equation in the original Scargle
         paper (the "log" was missing). The following corrected form is taken
@@ -287,18 +283,16 @@ class FitnessFunc:
         return signature(self.fitness).parameters.keys()
 
     def compute_ncp_prior(self, N):
-        """
-        If ``ncp_prior`` is not explicitly defined, compute it from ``gamma``
+        """If ``ncp_prior`` is not explicitly defined, compute it from ``gamma``
         or ``p0``.
         """
-
         if self.gamma is not None:
             return -np.log(self.gamma)
         elif self.p0 is not None:
             return self.p0_prior(N)
         else:
             raise ValueError(
-                "``ncp_prior`` cannot be computed as neither " "``gamma`` nor ``p0`` is defined."
+                "``ncp_prior`` cannot be computed as neither " "``gamma`` nor ``p0`` is defined.",
             )
 
     def fit(self, t, x=None, sigma=None):
@@ -338,10 +332,7 @@ class FitnessFunc:
         last = np.zeros(N, dtype=int)
 
         # Compute ncp_prior if not defined
-        if self.ncp_prior is None:
-            ncp_prior = self.compute_ncp_prior(N)
-        else:
-            ncp_prior = self.ncp_prior
+        ncp_prior = self.compute_ncp_prior(N) if self.ncp_prior is None else self.ncp_prior
 
         # ----------------------------------------------------------------
         # Start with first data cell; add one cell at each iteration
@@ -400,7 +391,7 @@ class FitnessFunc:
 
 
 class Events(FitnessFunc):
-    r"""Bayesian blocks fitness for binned or unbinned events
+    r"""Bayesian blocks fitness for binned or unbinned events.
 
     Parameters
     ----------
@@ -436,7 +427,7 @@ class Events(FitnessFunc):
 
 
 class RegularEvents(FitnessFunc):
-    r"""Bayesian blocks fitness for regular events
+    r"""Bayesian blocks fitness for regular events.
 
     This is for data which has a fundamental "tick" length, so that all
     measured values are multiples of this tick length.  In each tick, there
@@ -457,7 +448,7 @@ class RegularEvents(FitnessFunc):
         ignored.
     """
 
-    def __init__(self, dt, p0=0.05, gamma=None, ncp_prior=None):
+    def __init__(self, dt, p0=0.05, gamma=None, ncp_prior=None) -> None:
         self.dt = dt
         super().__init__(p0, gamma, ncp_prior)
 
@@ -484,7 +475,7 @@ class RegularEvents(FitnessFunc):
 
 
 class PointMeasures(FitnessFunc):
-    r"""Bayesian blocks fitness for point measures
+    r"""Bayesian blocks fitness for point measures.
 
     Parameters
     ----------
@@ -499,7 +490,7 @@ class PointMeasures(FitnessFunc):
         ignored.
     """
 
-    def __init__(self, p0=0.05, gamma=None, ncp_prior=None):
+    def __init__(self, p0=0.05, gamma=None, ncp_prior=None) -> None:
         super().__init__(p0, gamma, ncp_prior)
 
     def fitness(self, a_k, b_k):
@@ -517,6 +508,7 @@ def scott_bin_width(data, return_bins=False):
     Scott's rule is a normal reference rule: it minimizes the integrated
     mean squared error in the bin approximation under the assumption that the
     data is approximately Gaussian.
+
     Parameters
     ----------
     data : array_like, ndim=1
@@ -536,6 +528,8 @@ def scott_bin_width(data, return_bins=False):
         \Delta_b = \frac{3.5\sigma}{n^{1/3}}
     where :math:`\sigma` is the standard deviation of the data, and
     :math:`n` is the number of data points [1]_.
+
+
     References
     ----------
     .. [1] Scott, David W. (1979). "On optimal and data-based histograms".
@@ -545,7 +539,7 @@ def scott_bin_width(data, return_bins=False):
     knuth_bin_width
     freedman_bin_width
     bayesian_blocks
-    histogram
+    histogram.
     """
     data = np.asarray(data)
     if data.ndim != 1:
@@ -570,6 +564,7 @@ def freedman_bin_width(data, return_bins=False):
     The Freedman-Diaconis rule is a normal reference rule like Scott's
     rule, but uses rank-based statistics for results which are more robust
     to deviations from a normal distribution.
+
     Parameters
     ----------
     data : array_like, ndim=1
@@ -589,6 +584,8 @@ def freedman_bin_width(data, return_bins=False):
         \Delta_b = \frac{2(q_{75} - q_{25})}{n^{1/3}}
     where :math:`q_{N}` is the :math:`N` percent quartile of the data, and
     :math:`n` is the number of data points [1]_.
+
+
     References
     ----------
     .. [1] D. Freedman & P. Diaconis (1981)
@@ -599,7 +596,7 @@ def freedman_bin_width(data, return_bins=False):
     knuth_bin_width
     scott_bin_width
     bayesian_blocks
-    histogram
+    histogram.
     """
     data = np.asarray(data)
     if data.ndim != 1:
@@ -623,7 +620,7 @@ def freedman_bin_width(data, return_bins=False):
                     "The inter-quartile range of the data is too small: "
                     "failed to construct histogram with {} bins. "
                     "Please use another bin method, such as "
-                    'bins="scott"'.format(Nbins + 1)
+                    'bins="scott"'.format(Nbins + 1),
                 )
             else:  # Something else  # pragma: no cover
                 raise
@@ -636,6 +633,7 @@ def knuth_bin_width(data, return_bins=False, quiet=True):
     r"""Return the optimal histogram bin width using Knuth's rule.
     Knuth's rule is a fixed-width, Bayesian approach to determining
     the optimal bin width of a histogram.
+
     Parameters
     ----------
     data : array_like, ndim=1
@@ -661,6 +659,8 @@ def knuth_bin_width(data, return_bins=False, quiet=True):
     where :math:`\Gamma` is the Gamma function, :math:`n` is the number of
     data points, :math:`n_k` is the number of measurements in bin :math:`k`
     [1]_.
+
+
     References
     ----------
     .. [1] Knuth, K.H. "Optimal Data-Based Binning for Histograms".
@@ -670,7 +670,7 @@ def knuth_bin_width(data, return_bins=False, quiet=True):
     freedman_bin_width
     scott_bin_width
     bayesian_blocks
-    histogram
+    histogram.
     """
     # import here because of optional scipy dependency
     from scipy import optimize
@@ -703,12 +703,13 @@ class _KnuthF:
         + \sum_{k=1}^M \log\Gamma(n_k + \frac{1}{2})
     where :math:`\Gamma` is the Gamma function, :math:`n` is the number of
     data points, :math:`n_k` is the number of measurements in bin :math:`k`.
+
     See Also
     --------
-    knuth_bin_width
+    knuth_bin_width.
     """
 
-    def __init__(self, data):
+    def __init__(self, data) -> None:
         self.data = np.array(data, copy=True)
         if self.data.ndim != 1:
             raise ValueError("data should be 1-dimensional")
@@ -724,7 +725,7 @@ class _KnuthF:
         self.gammaln = special.gammaln
 
     def bins(self, M):
-        """Return the bin edges given a width dx"""
+        """Return the bin edges given a width dx."""
         return np.linspace(self.data[0], self.data[-1], int(M) + 1)
 
     def __call__(self, M):

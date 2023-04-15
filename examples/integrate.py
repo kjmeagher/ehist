@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
 import numpy as np
 import pylab as plt
 from scipy import integrate

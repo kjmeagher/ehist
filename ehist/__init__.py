@@ -1,6 +1,8 @@
-"""
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
 
-ehist is a module for ergoonomic plotting of histograms. It aims to use sane defaults
+"""ehist is a module for ergoonomic plotting of histograms. It aims to use sane defaults
 based on the sample provided.
 
 """

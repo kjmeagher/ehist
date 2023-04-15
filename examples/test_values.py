@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
 from ehist import Hist1D
 
 values = range(1, 100)

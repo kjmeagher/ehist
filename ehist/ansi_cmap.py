@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
 import numpy as np
 
 _lower_block = "▄"
@@ -40,10 +44,7 @@ def ansi_cmap(x, y, z, cmap=None):
     assert x.size in [z.shape[1], x.size == z.shape[1] + 1]
     assert y.size in [z.shape[0], y.size == z.shape[0] + 1]
 
-    if cmap is None:
-        cmap = _viridis.copy()
-    else:
-        cmap = cmap.copy()
+    cmap = _viridis.copy() if cmap is None else cmap.copy()
 
     zmin = z[z > 0].min()
     ci = (z - zmin) / (z.max() - zmin) * (len(cmap))

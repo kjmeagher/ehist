@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
 import numpy as np
 import pylab as plt
 
@@ -9,8 +13,6 @@ y1 = np.linspace(0, 10, 50)
 xx, yy = np.meshgrid(x1, y1)
 z1 = 30 * xx * np.exp(-xx) - yy
 print(ansi_cmap(x1, y1, z1))
-
-import pylab as plt
 
 plt.pcolormesh(xx, yy, z1, shading="auto", cmap=None)
 plt.colorbar()

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
 import numbers
 
 import numpy as np
@@ -8,16 +12,12 @@ def span(x):
 
 
 def is_integer(x):
-    """
-    Return true if parameter is integer type or float that exactly represents and integer
-    """
+    """Return true if parameter is integer type or float that exactly represents and integer."""
     return isinstance(x, numbers.Integral) or x.is_integer()
 
 
 def geomspace_int(start, stop, num=50, dtype=np.int64):
-
-    """
-    Return integers approximately spaced evenly on a log scale
+    """Return integers approximately spaced evenly on a log scale
     (a geometric progression).
 
     This is similar to `numpy.geomspace()` except it returns integers.
@@ -35,15 +35,17 @@ def geomspace_int(start, stop, num=50, dtype=np.int64):
         is inferred from `start` and `stop`. The inferred dtype will always be
         an integer.
     """
-
     if num == 0:
         return np.array([], dtype=dtype)
     if num < 0:
-        raise ValueError(f"Number of samples, {num}, must be non-negative")
+        msg = f"Number of samples, {num}, must be non-negative"
+        raise ValueError(msg)
     if not is_integer(start) or not is_integer(stop) or not is_integer(num):
-        raise ValueError("Parameters start, stop, and num are required to be integers")
+        msg = "Parameters start, stop, and num are required to be integers"
+        raise ValueError(msg)
     if not np.issubdtype(dtype, np.integer):
-        raise ValueError("Parameters dtype must be an integer type")
+        msg = "Parameters dtype must be an integer type"
+        raise ValueError(msg)
 
     start = int(start)
     stop = int(stop)
@@ -68,14 +70,14 @@ def geomspace_int(start, stop, num=50, dtype=np.int64):
         result.append(result[-1] + delta)
     result[-1] = stop
 
-    # assert len(result) == min(stop - start + 1, num)
     return np.array(result, dtype=dtype)[::order]
 
 
 def handle_weights(w, weights):
     # Handle the weights
     if w is not None and weights is not None:
-        raise ValueError("you cannont set `w` and `weights` at the same time")
+        msg = "you can not set `w` and `weights` at the same time"
+        raise ValueError(msg)
     if weights is None:
         weights = w
     if weights is None:
@@ -109,9 +111,9 @@ vertical_line = "┃"
 
 def make_bar(y, min_y, max_y, width, blocks):
     if max_y <= min_y:
-        raise ValueError()
-    if len(blocks) < 2:
-        raise ValueError()
+        raise ValueError
+    if len(blocks) < 2:  # noqa: PLR2004
+        raise ValueError
     empty_block = blocks[0]
     frac_blocks = blocks[1:-1]
     full_block = blocks[-1]
@@ -133,7 +135,7 @@ def make_bar(y, min_y, max_y, width, blocks):
 
 
 class HorizontalPlot:
-    def __init__(self, width=80):
+    def __init__(self, width=80) -> None:
         self.cols = []
         self.rows = None
         self.width = width
@@ -145,13 +147,10 @@ class HorizontalPlot:
             assert self.rows == len(col)
 
         if t in [float]:
-            a = np.log10(max(np.abs(col))) > 5
+            a = np.log10(max(np.abs(col))) > 5  # noqa: PLR2004
             b = min(np.abs(col)) != 0
-            c = np.log10(min(np.abs(col[col != 0]))) < -2
-            if a or (b and c):
-                fmt = "{:7.2e}"
-            else:
-                fmt = "{:0.2f}"
+            c = np.log10(min(np.abs(col[col != 0]))) < -2  # noqa: PLR2004
+            fmt = "{:7.2e}" if a or b and c else "{:0.2f}"
             c = [fmt.format(r) for r in col]
             align = ">"
         elif t in [int]:
@@ -164,7 +163,6 @@ class HorizontalPlot:
         self.cols.append((c, m, align, prefix, postfix))
 
     def get_plot(self, y, min_y, max_y):
-
         assert self.rows == len(y)
         bar_width = self.width - sum(m + len(pre) + len(post) + 1 for _, m, _, pre, post in self.cols)
         line = self.width * line_char
@@ -180,18 +178,14 @@ class HorizontalPlot:
 
 
 class VerticalPlot:
-    def __init__(self, width=80, height=25):
-        # self.cols=[]
-        # self.rows=None
+    def __init__(self, width=80, height=25) -> None:
         self.width = width
         self.height = height
 
     def get_plot(self, y, min_y, max_y):
-
         print(min_y, max_y)
         rep = max(1, self.width // len(y))
         bars = []
         for yy in y:
             bars += rep * [make_bar(yy, min_y, max_y, self.height, vertical_blocks)[::-1]]
-        out = "".join("".join(a) + "\n" for a in zip(*bars))
-        return out
+        return "".join("".join(a) + "\n" for a in zip(*bars))

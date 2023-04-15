@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
 import sys
 
 import numpy as np
@@ -6,7 +11,6 @@ import pylab as plt
 from scipy import stats
 
 from ehist import Hist1D as h1
-from ehist.axis import print_axis
 
 
 def main(d):
@@ -23,55 +27,55 @@ def main(d):
         plt.figure()
         h.plot(**pargs)
         plt.title(x)
-        xx = h.x.uniform()
+        h.x.uniform()
     plt.show()
 
 
 def Triangle():
     x = stats.triang.ppf(np.linspace(0, 1, 1000, 1), 1)
-    return dict(points=x, bins=120), dict(s="steps,err")
+    return {"points": x, "bins": 120}, {"s": "steps,err"}
 
 
 def PowerLaw():
     e = np.geomspace(1e3, 1e6, 1000)
-    return dict(points=e, bins=30, t="log"), dict(s="err,marker,steps", logy=True)
+    return {"points": e, "bins": 30, "t": "log"}, {"s": "err,marker,steps", "logy": True}
 
 
 def Zenith():
     cz = np.arccos(np.linspace(-1, 1, 1000))
-    return dict(points=cz, bins=20, t=np.cos), dict(s="err,marker,steps")
+    return {"points": cz, "bins": 20, "t": np.cos}, {"s": "err,marker,steps"}
 
 
 def Int():
     X = np.linspace(0, 21, 106)[:-1].astype(int)
-    return dict(points=X, bins=20, t=int), dict(s="err,marker,steps")
+    return {"points": X, "bins": 20, "t": int}, {"s": "err,marker,steps"}
 
 
 def LogInt():
     N = 1001
     x = [int(N / i) * [i] for i in range(1, N)]
     p = [val for sublist in x for val in sublist]
-    return dict(points=p, t="logint", bins=20), dict(s="steps,marker,err", logy=True)
+    return {"points": p, "t": "logint", "bins": 20}, {"s": "steps,marker,err", "logy": True}
 
 
 def Freedman():
     x = stats.norm.ppf(np.linspace(0, 1, 1002)[1:-1])
-    return dict(points=x, bins="freedman"), {}
+    return {"points": x, "bins": "freedman"}, {}
 
 
 def Scott():
     x = stats.norm.ppf(np.linspace(0, 1, 1002)[1:-1])
-    return dict(points=x, bins="scott"), {}
+    return {"points": x, "bins": "scott"}, {}
 
 
 def Knuth():
     x = stats.norm.ppf(np.linspace(0, 1, 1002)[1:-1])
-    return dict(points=x, bins="knuth"), {}
+    return {"points": x, "bins": "knuth"}, {}
 
 
 def Blocks():
     x = stats.norm.ppf(np.linspace(0, 1, 1002)[1:-1])
-    return dict(points=x, bins="blocks"), {}
+    return {"points": x, "bins": "blocks"}, {}
 
 
 if __name__ == "__main__":

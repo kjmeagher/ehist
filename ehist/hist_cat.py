@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
 import numpy as np
 import pylab as plt
 
@@ -5,8 +9,7 @@ from .util import HorizontalPlot, arrow_char, get_name, handle_weights, pm_char
 
 
 class HistCat:
-    def __init__(self, data, w=None, weights=None, names=None, label=None, color=None):
-
+    def __init__(self, data, w=None, weights=None, names=None, label=None, color=None) -> None:
         weights, self.weighted, self.scaled = handle_weights(w, weights)
         self.vals, self.N = np.unique(data, return_counts=True)
         if self.weighted:

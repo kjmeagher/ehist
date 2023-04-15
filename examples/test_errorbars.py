@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
 import numpy as np
 import pylab as plt
 from scipy import stats
@@ -7,10 +11,6 @@ lims = (stats.norm.cdf(-1), stats.norm.cdf(1))
 print(lims)
 cl = lims[-1] - lims[0]
 
-
-# print(stats.norm.interval(0.68))
-
-# print (stats.poisson.isf(lims[-1]))
 
 x = np.arange(11)
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
 import unittest
 
 import numpy as np
@@ -16,7 +20,6 @@ def quadratic(x, a, b, c):
 
 class TestAxis(unittest.TestCase):
     def test_integer(self):
-
         v = sum([i * [i] for i in range(10)], [])
         h = Hist1D(v)
         assert_array_equal(h.N, range(1, 10))

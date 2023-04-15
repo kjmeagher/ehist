@@ -1,7 +1,10 @@
-"""
-axis.py
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
 
-This file contains different implementations of histgram axes
+"""axis.py.
+
+This file contains different implementations of histogram axes
 """
 
 import math as m
@@ -15,17 +18,12 @@ from .util import geomspace_int
 
 
 class IntAxis:
-    """
-    Axis for formatting integer histograms
-    """
+    """Axis for formatting integer histograms."""
 
     def bin_spacing(self, points, nbins, span):
-        if span is None:
-            span = [int(np.min(points)), int(np.max(points))]
-        else:
-            span = list(span)
+        span = [int(np.min(points)), int(np.max(points))] if span is None else list(span)
 
-        assert len(span) == 2
+        assert len(span) == 2  # noqa: PLR2004
         assert isinstance(span[0], numbers.Integral)
         assert isinstance(span[1], numbers.Integral)
         span[1] += 1
@@ -60,7 +58,6 @@ class IntAxis:
             self.edges = self.bins
 
     def pylab_axis(self, axis):
-
         if np.all(self.widths == 1):
             axis.xaxis.set_tick_params(which="major", length=0)
             x = self.pcenters
@@ -68,8 +65,9 @@ class IntAxis:
             x = self.bins
 
         axis.xaxis.set_minor_locator(FixedLocator(self.pedges))
-        if self.pedges.size > 10:
-            xi = list(range(0, int(0.9 * len(x)), max(1, len(x) // 5))) + [len(x) - 1]
+        max_ticks = 10
+        if self.pedges.size > max_ticks:
+            xi = [*list(range(0, int(0.9 * len(x)), max(1, len(x) // 5))), len(x) - 1]
         else:
             xi = range(len(x))
         axis.xaxis.set_major_locator(FixedLocator(x[xi]))
@@ -79,8 +77,7 @@ class IntAxis:
 
 
 class LogIntAxis:
-    """
-    Axis for ploting integer distribution which are logarythmic
+    """Axis for plotting integer distribution which are logarithmic.
 
     This creates an axis with bins spaced approximately geometrically but
     rounded to the nearest integer. Special consideration is take for low
@@ -89,7 +86,6 @@ class LogIntAxis:
     """
 
     def bin_spacing(self, points, bins, span):
-
         if span is None:
             span = [int(np.min(points)), int(np.max(points))]
 
@@ -126,9 +122,10 @@ class LinearAxis:
         pass
 
     def uniform(self):
-        if len(self.bins) >= 100:
+        max_bins = 100
+        if len(self.bins) >= max_bins:
             return self.bins
-        return np.linspace(self.bins[0], self.bins[-1], 100)
+        return np.linspace(self.bins[0], self.bins[-1], max_bins)
 
 
 class LogAxis:
@@ -147,9 +144,10 @@ class LogAxis:
         ax.set_xscale("log")
 
     def uniform(self):
-        if len(self.bins) >= 100:
+        max_bins = 100
+        if len(self.bins) >= max_bins:
             return self.bins
-        return np.geomspace(self.bins[0], self.bins[-1], 100)
+        return np.geomspace(self.bins[0], self.bins[-1], max_bins)
 
 
 class ZenithAxis:
@@ -157,7 +155,7 @@ class ZenithAxis:
         if span is None:
             span = [np.min(points), np.max(points)]
         # coerse the values to common edges
-        if span[0] < 0.1:
+        if span[0] < 0.1:  # noqa: PLR2004
             span[0] = 0
         if span[1] >= np.pi / 2 - 0.1 and span[1] <= np.pi / 2:
             span[1] = np.pi / 2
@@ -188,13 +186,13 @@ class ZenithAxis:
         ax.xaxis.set_minor_locator(FixedLocator(np.cos(np.deg2rad(minor))))
 
     def uniform(self):
-        if len(self.bins) >= 100:
+        max_bins = 100
+        if len(self.bins) >= max_bins:
             return self.bins
-        return np.cos(np.linspace(self.bins[0], self.bins[-1], 100))
+        return np.cos(np.linspace(self.bins[0], self.bins[-1], max_bins))
 
 
-def AutoAxis(points, bins=None, span=None, t=None):
-
+def auto_axis(points, bins=None, span=None, t=None):
     points = np.asarray(points)
 
     if t is None:
@@ -203,7 +201,8 @@ def AutoAxis(points, bins=None, span=None, t=None):
         elif issubclass(points.dtype.type, np.floating):
             t = float
         else:
-            raise ValueError(f"don't know what to do with points dtype={points.dtype}")
+            mesg = f"don't know what to do with points dtype={points.dtype}"
+            raise ValueError(mesg)
 
     if t in [int, "int"]:
         ax = IntAxis()
@@ -224,13 +223,14 @@ def AutoAxis(points, bins=None, span=None, t=None):
         if bins == "blocks":
             bins = bayesian_blocks(points)
         elif bins == "knuth":
-            _, bins = knuth_bin_width(points, True)
+            _, bins = knuth_bin_width(points, return_bins=True)
         elif bins == "scott":
-            _, bins = scott_bin_width(points, True)
+            _, bins = scott_bin_width(points, return_bins=True)
         elif bins == "freedman":
-            _, bins = freedman_bin_width(points, True)
+            _, bins = freedman_bin_width(points, return_bins=True)
         else:
-            raise ValueError(f"unrecognized bin code: '{bins}'")
+            msg = f"unrecognized bin code: '{bins}'"
+            raise ValueError(msg)
 
     if np.isscalar(bins):
         ax.bin_spacing(points, bins, span)
@@ -244,5 +244,5 @@ def AutoAxis(points, bins=None, span=None, t=None):
 def print_axis(axis):
     print(
         f"{axis.__class__.__name__}\n\tb: {axis.bins}\n\tw: {axis.widths}\n\te: {axis.edges}"
-        f"\n\tc: {axis.pcenters}\n\te: {axis.pedges}"
+        f"\n\tc: {axis.pcenters}\n\te: {axis.pedges}",
     )

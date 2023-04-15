@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
 import numpy as np
 import pylab as plt
 from matplotlib import colors
@@ -6,9 +10,9 @@ from .ansi_cmap import ansi_cmap
 
 
 class Hist2D:
-    def __init__(self, x, y, bins=(60, 50), range=None, log=(False, False), weights=1.0):
+    def __init__(self, x, y, bins=(60, 50), range=None, log=(False, False), weights=1.0) -> None:
         assert len(x) == len(
-            y
+            y,
         ), f"x and y must have the same dimensions: len(x) = {len(x)}, len(y) = {len(y)}"
 
         if np.isscalar(weights):
@@ -47,7 +51,11 @@ class Hist2D:
         nancut = np.array(np.isfinite(x) & np.isfinite(y), dtype=bool)
         self.entries = nancut.sum()
         self.z, self.xedges, self.yedges = np.histogram2d(
-            x[nancut], y[nancut], bins=bins, range=range, weights=weights[nancut]
+            x[nancut],
+            y[nancut],
+            bins=bins,
+            range=range,
+            weights=weights[nancut],
         )
 
         if self.logx:
@@ -56,7 +64,6 @@ class Hist2D:
             self.yedges = 10**self.yedges
 
     def plot(self, logz=False, norm=None, zrange=None):
-
         z = np.ma.masked_where(self.z == 0, self.z)
         if norm is None:
             pass
@@ -67,7 +74,8 @@ class Hist2D:
             for y in range(z.shape[1]):
                 z[:, y] = z[:, y] / z[:, y].sum()
         else:
-            raise ValueError(f"Unknown value for norm: {norm}")
+            msg = f"Unknown value for norm: {norm}"
+            raise ValueError(msg)
 
         if zrange is None:
             zrange = (z.min(), z.max())
@@ -87,11 +95,9 @@ class Hist2D:
             plt.yscale("log")
 
     def plot_text(self):
+        return ansi_cmap(self.xedges, self.yedges, self.z.T)
 
-        s = ansi_cmap(self.xedges, self.yedges, self.z.T)
-        return s
-
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"<{self.__class__.__name__,} "
             f"bins=({len(self.xedges) - 1},{len(self.yedges) - 1})"

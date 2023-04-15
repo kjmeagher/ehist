@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 The ehist authors
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
 import functools
 import inspect
 import warnings
@@ -7,7 +11,7 @@ import pylab as plt
 from scipy import integrate, optimize
 from scipy.stats import poisson
 
-from .axis import AutoAxis, IntAxis, LogIntAxis
+from .axis import IntAxis, LogIntAxis, auto_axis
 from .util import HorizontalPlot, VerticalPlot, handle_weights
 
 _logx_warning = False
@@ -26,12 +30,12 @@ class Hist1D:
         weights=None,
         label=None,
         color=None,
-    ):
-
+    ) -> None:
         weights, self.weighted, self.scaled = handle_weights(w, weights)
 
         if self.weighted and isinstance(bins, str):
-            raise ValueError(f"Weights are not supported for dynamic binning: {bins}")
+            msg = f"Weights are not supported for dynamic binning: {bins}"
+            raise ValueError(msg)
 
         # remove any NANs and infs
         points = np.array(points)
@@ -44,12 +48,12 @@ class Hist1D:
             assert len(weights) == len(points)
 
         if logx:
-            global _logx_warning
+            global _logx_warning  # noqa: PLW0603
             if not _logx_warning:
-                warnings.warn("Hist1D param logx depricated")
+                warnings.warn("Hist1D param logx deprecated", stacklevel=2)
                 _logx_warning = True
             t = np.log
-        self.x = AutoAxis(points, bins, range, t)
+        self.x = auto_axis(points, bins, range, t)
 
         self.N, x = np.histogram(points, bins=self.x.edges, range=range)
         if norm:
@@ -64,7 +68,6 @@ class Hist1D:
             self.Aerr = self.Asq**0.5
         else:
             self.A = self.N * weights
-            # self.Aerr = (weights * np.maximum(self.N,1))**.5
             self.Aerr = self.N**0.5 * weights
         assert self.N.dtype == np.int64
 
@@ -95,7 +98,8 @@ class Hist1D:
             y = self.N.copy()
             yerr = np.ones_like(self.N)
         else:
-            raise ValueError("Unrecognized value for `show`: '{show}'")
+            msg = f"Unrecognized value for `show`: '{show}'"
+            raise ValueError(msg)
         return y, yerr
 
     def plot(
@@ -104,18 +108,13 @@ class Hist1D:
         scale=1,
         logy=None,
         ymin=None,
-        # show="Area",
         fmt=None,
         ax=None,
         **kwargs,
     ):
-
         if ax is None:
             ax = plt.gca()
 
-        # y, yerr = self._get_hist(show)
-        # y = self.H
-        # yerr = self.
         y = scale * self.H
         yerr = scale * self.Herr
 
@@ -163,7 +162,8 @@ class Hist1D:
                 args["ds"] = "steps-pre"
                 p = ax.plot(np.r_[self.x.pedges, self.x.pedges[-1]], np.r_[0, y, 0], **args)
             else:
-                raise Exception("unknown plot type {s!r}")
+                msg = f"unknown plot type {s!r}"
+                raise ValueError(msg)
 
             if self.color is None and p:
                 self.color = p[0].get_color()
@@ -193,12 +193,7 @@ class Hist1D:
         return p.get_plot(y, min_y, max_y)
 
     def htext(self, show_area=False, show_count=True, logy=False, width=80):
-
         y, min_y, max_y = self._get_yaxis_text(logy=logy)
-
-        # y = self.H
-        # min_y = y.min()
-        # max_y = y.max()
 
         print("YYY", y)
 
@@ -259,13 +254,16 @@ class Hist1D:
     #         raise Exception("Unknown interpolation method {}".format(method))
 
     def fit(self, func, p0=None, mask=None, method="points", **kwargs):
-
         if mask is None:
             mask = self.Herr > 0
 
         if method == "points":
             fit = optimize.curve_fit(
-                func, self.x.pcenters[mask], self.H[mask], sigma=self.Herr[mask], p0=p0
+                func,
+                self.x.pcenters[mask],
+                self.H[mask],
+                sigma=self.Herr[mask],
+                p0=p0,
             )
         elif method == "quad":
             fit = optimize.minimize(self._integrate, p0, args=(func, self.x.edges, self.N), **kwargs)
@@ -300,9 +298,9 @@ class Hist1D:
         return -poisson.logpmf(y, rate).sum()
 
     def integral_fit(self, iteg, p0, **kwargs):
-
         if self.weighted:
-            raise Exception("integral fit Cannont be performed on Weighted Histogram")
+            msg = "integral fit Can not be performed on Weighted Histogram"
+            raise RuntimeError(msg)
 
         y, _ = self._get_hist("area")
         self.fit_integral = iteg
@@ -315,23 +313,21 @@ class Hist1D:
     def _integrate(p, func, xedges, y):
         rate = np.zeros(len(y), dtype=float)
         for i in range(len(y)):
-            # print('X',func, xedges[i], xedges[i + 1])
             rate[i], _ = integrate.quad(func, xedges[i], xedges[i + 1], args=tuple(p))
-
-        # print(rate)
-        val = -poisson.logpmf(y, rate).sum()
-        # print(p,val)
-        return val
+        return -poisson.logpmf(y, rate).sum()
 
     def function_fit(self, func, p0, **kwargs):
-
         if self.weighted:
-            raise Exception("integral fit Cannont be performed on Weighted Histogram")
+            msg = "integral fit can not be performed on Weighted Histogram"
+            raise RuntimeError(msg)
 
         self.fit_integral = None
         self.fit_function = func
         self.fit_result = optimize.minimize(
-            self._integrate, p0, args=(self.x.edges, self.N, func), **kwargs
+            self._integrate,
+            p0,
+            args=(self.x.edges, self.N, func),
+            **kwargs,
         )
 
         return self.fit_result
@@ -379,12 +375,11 @@ class Hist1D:
     #     else:
     #         y = self.y
 
-    # ax.scatter(self.xcenter, y, c="k", label="Counts")
     # if logy:
     #     ax.axis(ymin=ymin)
     #     ax.semilogy()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"<{self.__class__.__name__} {self.x.__class__.__name__} "
             f"bins={len(self.x.pcenters),} "
