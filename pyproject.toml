@@ -31,8 +31,12 @@ dynamic = ["version", "description"]
 [project.urls]
 Home = "https://github.com/kjmeagher/ehist"
 
+[project.optional-dependencies]
+test = ["pytest", "pytest-cov"]
+
 [tool.pytest.ini_options]
-testpaths = ["ehist", "tests"]
+testpaths = ["tests"]
+addopts = ["--cov"]
 
 [tool.black]
 line-length = 108
