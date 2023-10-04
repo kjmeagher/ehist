@@ -183,7 +183,6 @@ class VerticalPlot:
         self.height = height
 
     def get_plot(self, y, min_y, max_y):
-        print(min_y, max_y)
         rep = max(1, self.width // len(y))
         bars = []
         for yy in y:

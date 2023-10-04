@@ -242,7 +242,7 @@ def auto_axis(points, bins=None, span=None, t=None):
 
 
 def print_axis(axis):
-    print(
+    return (
         f"{axis.__class__.__name__}\n\tb: {axis.bins}\n\tw: {axis.widths}\n\te: {axis.edges}"
-        f"\n\tc: {axis.pcenters}\n\te: {axis.pedges}",
+        f"\n\tc: {axis.pcenters}\n\te: {axis.pedges}"
     )

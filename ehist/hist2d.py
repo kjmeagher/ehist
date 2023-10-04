@@ -10,7 +10,15 @@ from .ansi_cmap import ansi_cmap
 
 
 class Hist2D:
-    def __init__(self, x, y, bins=(60, 50), range=None, log=(False, False), weights=1.0) -> None:
+    def __init__(
+        self,
+        x,
+        y,
+        bins=(60, 50),
+        range=None,  # noqa: A002
+        log=(False, False),
+        weights=1.0,
+    ) -> None:
         assert len(x) == len(
             y,
         ), f"x and y must have the same dimensions: len(x) = {len(x)}, len(y) = {len(y)}"
@@ -46,7 +54,7 @@ class Hist2D:
                 rangey = np.log10(rangey)
 
         if range is not None:
-            range = (rangex, rangey)
+            range = (rangex, rangey)  # noqa: A001
 
         nancut = np.array(np.isfinite(x) & np.isfinite(y), dtype=bool)
         self.entries = nancut.sum()
@@ -99,7 +107,7 @@ class Hist2D:
 
     def __str__(self) -> str:
         return (
-            f"<{self.__class__.__name__,} "
+            f"<{self.__class__.__name__} "
             f"bins=({len(self.xedges) - 1},{len(self.yedges) - 1})"
             f"range=[[{self.xedges[0]:0.2f},{self.xedges[-1]:0.2f}],"
             f"[{self.yedges[0]:0.2f},{self.yedges[-1]:0.2f}]]"

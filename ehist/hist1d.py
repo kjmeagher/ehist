@@ -22,7 +22,7 @@ class Hist1D:
         self,
         points,
         bins=None,
-        range=None,
+        range=None,  # noqa: A002
         norm=None,
         logx=False,
         t=None,
@@ -194,8 +194,6 @@ class Hist1D:
 
     def htext(self, show_area=False, show_count=True, logy=False, width=80):
         y, min_y, max_y = self._get_yaxis_text(logy=logy)
-
-        print("YYY", y)
 
         lowedges = self.x.bins.copy()[:-1]
         highedges = self.x.bins.copy()[1:]
@@ -382,7 +380,7 @@ class Hist1D:
     def __str__(self) -> str:
         return (
             f"<{self.__class__.__name__} {self.x.__class__.__name__} "
-            f"bins={len(self.x.pcenters),} "
+            f"bins={len(self.x.pcenters)} "
             f"range=[{self.x.edges[0]:0.2f},{self.x.edges[-1]:0.2f}]"
             f"entries={self.entries}>"
         )

@@ -44,9 +44,9 @@ class TestAxis(unittest.TestCase):
 
         a6 = auto_axis(range(5, 23), 10)
         assert_allclose(a6.widths, [1] + 8 * [2] + [1])
-        assert_allclose(a6.edges, [5, *list(range(6, 23, 2))] + [23])
-        assert_allclose(a6.pcenters, [5.5, *list(range(7, 22, 2))] + [22.5])
-        assert_allclose(a6.pedges, [5, *list(range(6, 23, 2))] + [23])
+        assert_allclose(a6.edges, [5, *list(range(6, 23, 2)), 23])
+        assert_allclose(a6.pcenters, [5.5, *list(range(7, 22, 2)), 22.5])
+        assert_allclose(a6.pedges, [5, *list(range(6, 23, 2)), 23])
 
         a7 = auto_axis(range(5, 23), span=(10, 15))
         assert_allclose(a7.widths, 1)
@@ -61,7 +61,7 @@ class TestAxis(unittest.TestCase):
         assert_allclose(a8.pcenters, range(15, 92, 8))
         assert_allclose(a8.pedges, range(11, 92, 8))
 
-    def test_LogIntAxis(self):
+    def test_log_int_axis(self):
         b1 = np.arange(1, 11)
         a1 = auto_axis(b1, 10, t="logint")
         assert_allclose(a1.bins, b1)
@@ -113,7 +113,7 @@ class TestAxis(unittest.TestCase):
         assert_allclose(a1.pedges, b1)
         assert_allclose(a1.pcenters, b1[:-1] + 0.5)
 
-    def test_LogAxis(self):
+    def test_log_axis(self):
         b1 = np.geomspace(1, 10, 11)
         a1 = auto_axis(np.geomspace(1, 10, 100), 10, t="log")
         self.assertTrue(isinstance(a1, LogAxis))

@@ -46,7 +46,7 @@ from inspect import signature
 
 import numpy as np
 
-# TODO: implement other fitness functions from appendix B of Scargle 2012
+# TODO: implement other fitness functions from appendix B of Scargle 2012  # noqa: FIX002, TD002, TD003
 
 # __all__ = ['FitnessFunc', 'Events', 'RegularEvents', 'PointMeasures',
 #           'bayesian_blocks']
@@ -71,19 +71,19 @@ def bayesian_blocks(t, x=None, sigma=None, fitness="events", **kwargs):
         If a string, the following options are supported:
 
         - 'events' : binned or unbinned event data.  Arguments are ``gamma``,
-          which gives the slope of the prior on the number of bins, or
-          ``ncp_prior``, which is :math:`-\ln({\tt gamma})`.
+            which gives the slope of the prior on the number of bins, or
+            ``ncp_prior``, which is :math:`-\ln({\tt gamma})`.
         - 'regular_events' : non-overlapping events measured at multiples of a
-          fundamental tick rate, ``dt``, which must be specified as an
-          additional argument.  Extra arguments are ``p0``, which gives the
-          false alarm probability to compute the prior, or ``gamma``, which
-          gives the slope of the prior on the number of bins, or ``ncp_prior``,
-          which is :math:`-\ln({\tt gamma})`.
+            fundamental tick rate, ``dt``, which must be specified as an
+            additional argument.  Extra arguments are ``p0``, which gives the
+            false alarm probability to compute the prior, or ``gamma``, which
+            gives the slope of the prior on the number of bins, or ``ncp_prior``,
+            which is :math:`-\ln({\tt gamma})`.
         - 'measures' : fitness for a measured sequence with Gaussian errors.
-          Extra arguments are ``p0``, which gives the false alarm probability
-          to compute the prior, or ``gamma``, which gives the slope of the
-          prior on the number of bins, or ``ncp_prior``, which is
-          :math:`-\ln({\tt gamma})`.
+            Extra arguments are ``p0``, which gives the false alarm probability
+            to compute the prior, or ``gamma``, which gives the slope of the
+            prior on the number of bins, or ``ncp_prior``, which is
+            :math:`-\ln({\tt gamma})`.
 
         In all three cases, if more than one of ``p0``, ``gamma``, and
         ``ncp_prior`` is chosen, ``ncp_prior`` takes precedence over ``gamma``
@@ -137,7 +137,7 @@ def bayesian_blocks(t, x=None, sigma=None, fitness="events", **kwargs):
     References
     ----------
     .. [1] Scargle, J et al. (2012)
-       https://ui.adsabs.harvard.edu/abs/2013ApJ...764..167S
+        https://ui.adsabs.harvard.edu/abs/2013ApJ...764..167S
 
     See Also
     --------
@@ -166,27 +166,27 @@ class FitnessFunc:
     Derived classes should overload the following method:
 
     ``fitness(self, **kwargs)``:
-      Compute the fitness given a set of named arguments.
-      Arguments accepted by fitness must be among ``[T_k, N_k, a_k, b_k, c_k]``
-      (See [1]_ for details on the meaning of these parameters).
+        Compute the fitness given a set of named arguments.
+        Arguments accepted by fitness must be among ``[T_k, N_k, a_k, b_k, c_k]``
+        (See [1]_ for details on the meaning of these parameters).
 
     Additionally, other methods may be overloaded as well:
 
     ``__init__(self, **kwargs)``:
-      Initialize the fitness function with any parameters beyond the normal
-      ``p0`` and ``gamma``.
+        Initialize the fitness function with any parameters beyond the normal
+        ``p0`` and ``gamma``.
 
     ``validate_input(self, t, x, sigma)``:
-      Enable specific checks of the input data (``t``, ``x``, ``sigma``)
-      to be performed prior to the fit.
+        Enable specific checks of the input data (``t``, ``x``, ``sigma``)
+        to be performed prior to the fit.
 
     ``compute_ncp_prior(self, N)``: If ``ncp_prior`` is not defined explicitly,
-      this function is called in order to define it before fitting. This may be
-      calculated from ``gamma``, ``p0``, or whatever method you choose.
+        this function is called in order to define it before fitting. This may be
+        calculated from ``gamma``, ``p0``, or whatever method you choose.
 
     ``p0_prior(self, N)``:
-      Specify the form of the prior given the false-alarm probability ``p0``
-      (See [1]_ for details).
+        Specify the form of the prior given the false-alarm probability ``p0``
+        (See [1]_ for details).
 
     For examples of implemented fitness functions, see :class:`Events`,
     :class:`RegularEvents`, and :class:`PointMeasures`.
@@ -194,7 +194,7 @@ class FitnessFunc:
     References
     ----------
     .. [1] Scargle, J et al. (2012)
-       https://ui.adsabs.harvard.edu/abs/2013ApJ...764..167S
+        https://ui.adsabs.harvard.edu/abs/2013ApJ...764..167S
     """
 
     def __init__(self, p0=0.05, gamma=None, ncp_prior=None) -> None:
@@ -241,7 +241,7 @@ class FitnessFunc:
 
         # if x is specified, then we need to simultaneously sort t and x
         else:
-            # TODO: allow broadcasted x?
+            # TODO: allow broadcasted x?  # noqa: FIX002, TD002, TD003
             x = np.asarray(x, dtype=float)
 
             if x.shape not in [(), (1,), (t.size,)]:
@@ -533,7 +533,7 @@ def scott_bin_width(data, return_bins=False):
     References
     ----------
     .. [1] Scott, David W. (1979). "On optimal and data-based histograms".
-       Biometricka 66 (3): 605-610
+        Biometricka 66 (3): 605-610
     See Also
     --------
     knuth_bin_width
@@ -589,8 +589,8 @@ def freedman_bin_width(data, return_bins=False):
     References
     ----------
     .. [1] D. Freedman & P. Diaconis (1981)
-       "On the histogram as a density estimator: L2 theory".
-       Probability Theory and Related Fields 57 (4): 453-476
+        "On the histogram as a density estimator: L2 theory".
+        Probability Theory and Related Fields 57 (4): 453-476
     See Also
     --------
     knuth_bin_width
@@ -618,9 +618,9 @@ def freedman_bin_width(data, return_bins=False):
             if "Maximum allowed size exceeded" in str(e):
                 raise ValueError(
                     "The inter-quartile range of the data is too small: "
-                    "failed to construct histogram with {} bins. "
+                    f"failed to construct histogram with {Nbins + 1} bins. "
                     "Please use another bin method, such as "
-                    'bins="scott"'.format(Nbins + 1),
+                    'bins="scott"',
                 )
             else:  # Something else  # pragma: no cover
                 raise
@@ -664,7 +664,7 @@ def knuth_bin_width(data, return_bins=False, quiet=True):
     References
     ----------
     .. [1] Knuth, K.H. "Optimal Data-Based Binning for Histograms".
-       arXiv:0605197, 2006
+        arXiv:0605197, 2006
     See Also
     --------
     freedman_bin_width

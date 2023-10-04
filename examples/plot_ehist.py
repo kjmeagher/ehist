@@ -31,49 +31,49 @@ def main(d):
     plt.show()
 
 
-def Triangle():
+def triangle():
     x = stats.triang.ppf(np.linspace(0, 1, 1000, 1), 1)
     return {"points": x, "bins": 120}, {"s": "steps,err"}
 
 
-def PowerLaw():
+def power_law():
     e = np.geomspace(1e3, 1e6, 1000)
     return {"points": e, "bins": 30, "t": "log"}, {"s": "err,marker,steps", "logy": True}
 
 
-def Zenith():
+def zenith():
     cz = np.arccos(np.linspace(-1, 1, 1000))
     return {"points": cz, "bins": 20, "t": np.cos}, {"s": "err,marker,steps"}
 
 
-def Int():
-    X = np.linspace(0, 21, 106)[:-1].astype(int)
-    return {"points": X, "bins": 20, "t": int}, {"s": "err,marker,steps"}
+def integer():
+    x = np.linspace(0, 21, 106)[:-1].astype(int)
+    return {"points": x, "bins": 20, "t": int}, {"s": "err,marker,steps"}
 
 
-def LogInt():
-    N = 1001
-    x = [int(N / i) * [i] for i in range(1, N)]
+def log_int():
+    n = 1001
+    x = [int(n / i) * [i] for i in range(1, n)]
     p = [val for sublist in x for val in sublist]
     return {"points": p, "t": "logint", "bins": 20}, {"s": "steps,marker,err", "logy": True}
 
 
-def Freedman():
+def freedman():
     x = stats.norm.ppf(np.linspace(0, 1, 1002)[1:-1])
     return {"points": x, "bins": "freedman"}, {}
 
 
-def Scott():
+def scott():
     x = stats.norm.ppf(np.linspace(0, 1, 1002)[1:-1])
     return {"points": x, "bins": "scott"}, {}
 
 
-def Knuth():
+def knuth():
     x = stats.norm.ppf(np.linspace(0, 1, 1002)[1:-1])
     return {"points": x, "bins": "knuth"}, {}
 
 
-def Blocks():
+def blocks():
     x = stats.norm.ppf(np.linspace(0, 1, 1002)[1:-1])
     return {"points": x, "bins": "blocks"}, {}
 

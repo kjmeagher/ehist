@@ -51,17 +51,14 @@ max-line-length = "108"
 [tool.ruff]
 select = ["ALL"]
 ignore = [
-    "D",    # pydocstyle
-    "ANN",  # flake8-annotations
-    "T20",  # flake8-print
-    "S101", # assert-used
-    "PLR0913",
-    "FBT002",
-    "A001",
-    "A002",
-    "C901",
-    "PLR0912",
-    "ERA001",
+    "D",       # pydocstyle
+    "ANN",     # flake8-annotations
+    "S101",    # assert-used
+    "PLR0913", # Too many arguments to function call
+    "FBT002",  # Boolean default positional argument
+    "C901",    # is too complex
+    "PLR0912", # Too many branches
+    "ERA001",  # Found commented-out code
     ]
 line-length = 108
 target-version = "py37"
@@ -73,15 +70,14 @@ fixable = ["I"]
     "N","A","RET","EM","TRY","PLR","ISC","B","FBT"
 ]
 "tests/*" = [
-    "N",       # pep8-naming
     "PT",      # flake8-pytest-style
-    "PLR",     # max-statements
+    "PLR0915", # max-statements
     "INP001"
     ]
 "examples/*"=[
-    "N",
-    "INP",
-
+    "N813",
+    "INP001",
+    "T201",    # flake8-print
 ]
 
 [tool.codespell]
