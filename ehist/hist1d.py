@@ -8,8 +8,8 @@ import warnings
 
 import numpy as np
 import pylab as plt
-from scipy import integrate, optimize
-from scipy.stats import poisson
+from scipy import integrate, optimize  # pylint: disable=import-error
+from scipy.stats import poisson  # pylint: disable=import-error
 
 from .axis import IntAxis, LogIntAxis, auto_axis
 from .util import HorizontalPlot, VerticalPlot, handle_weights

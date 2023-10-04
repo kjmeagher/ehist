@@ -24,7 +24,8 @@ repos:
     hooks:
       - id: pylint
         files: ehist
-        additional_dependencies: [numpy, matplotlib, scipy]
+        args: [--ignore=E401]
+        additional_dependencies: [numpy, matplotlib]
   - repo: https://github.com/fsfe/reuse-tool
     rev: v2.1.0
     hooks:
