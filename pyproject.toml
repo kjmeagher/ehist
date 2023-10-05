@@ -8,7 +8,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "ehist"
-requires-python = "~=3.7"
+requires-python = "~=3.8"
 authors = [{name = "Kevin Meagher"}]
 license = {file = "LICENSE"}
 classifiers = [
@@ -18,10 +18,11 @@ classifiers = [
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Astronomy",
     "Topic :: Scientific/Engineering :: Physics",
 ]
@@ -40,7 +41,7 @@ addopts = ["--cov"]
 
 [tool.black]
 line-length = 108
-target-version = ["py37"]
+target-version = ["py38"]
 
 [tool.pylint.messages_control]
 disable = "C0103,C0104,C0114,C0115,C0116,W0603,R0902,R0903,R0912,R0913,R0914,W0201,W0622"
@@ -61,7 +62,7 @@ ignore = [
     "ERA001",  # Found commented-out code
     ]
 line-length = 108
-target-version = "py37"
+target-version = "py38"
 fixable = ["I"]
 
 
