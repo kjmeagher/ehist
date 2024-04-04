@@ -41,6 +41,7 @@ References
 .. [1] https://ui.adsabs.harvard.edu/abs/2013ApJ...764..167S
 .. [2] https://www.astroml.org/ https://github.com//astroML/astroML/
 """
+
 import warnings
 from inspect import signature
 
