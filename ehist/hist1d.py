@@ -8,8 +8,8 @@ import warnings
 
 import numpy as np
 import pylab as plt
-from scipy import integrate, optimize  # pylint: disable=import-error
-from scipy.stats import poisson  # pylint: disable=import-error
+from scipy import integrate, optimize
+from scipy.stats import poisson
 
 from .axis import IntAxis, LogIntAxis, auto_axis
 from .util import HorizontalPlot, VerticalPlot, handle_weights
@@ -265,6 +265,9 @@ class Hist1D:
             )
         elif method == "quad":
             fit = optimize.minimize(self._integrate, p0, args=(func, self.x.edges, self.N), **kwargs)
+        else:
+            msg = f"Unknown value for method: `{method}`"
+            raise ValueError(msg)
         return fit
 
         #         y, yerr = self._get_hist("area")

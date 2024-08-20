@@ -2,7 +2,6 @@
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
-# pylint: skip-file
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
 """Bayesian Blocks for Time Series Analysis
