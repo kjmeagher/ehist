@@ -39,15 +39,11 @@ test = ["pytest", "pytest-cov"]
 testpaths = ["tests"]
 addopts = ["--cov"]
 
-[tool.black]
-line-length = 108
-target-version = ["py38"]
-
 [tool.pylint.messages_control]
 disable = "C0103,C0104,C0114,C0115,C0116,W0603,R0902,R0903,R0912,R0913,R0914,W0201,W0622"
 
 [tool.pylint.format]
-max-line-length = "108"
+max-line-length = "128"
 
 [tool.ruff]
 select = ["ALL"]
@@ -61,7 +57,7 @@ ignore = [
     "PLR0912", # Too many branches
     "ERA001",  # Found commented-out code
     ]
-line-length = 108
+line-length = 128
 target-version = "py38"
 fixable = ["I"]
 

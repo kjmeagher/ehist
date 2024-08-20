@@ -265,6 +265,9 @@ class Hist1D:
             )
         elif method == "quad":
             fit = optimize.minimize(self._integrate, p0, args=(func, self.x.edges, self.N), **kwargs)
+        else:
+            msg = f"Unknown value for method: `{method}`"
+            raise ValueError(msg)
         return fit
 
         #         y, yerr = self._get_hist("area")
