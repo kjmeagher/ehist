@@ -8,7 +8,7 @@ import sys
 
 import numpy as np
 import pylab as plt
-from scipy import stats  # pylint: disable=import-error
+from scipy import stats
 
 from ehist import Hist1D as h1
 
