@@ -7,7 +7,11 @@ based on the sample provided.
 
 """
 
-__all__ = ["HistCat", "Hist1D", "Hist2D"]
+__all__ = [
+    "Hist1D",
+    "Hist2D",
+    "HistCat",
+]
 
 __version__ = "0.0.1"
 
