@@ -10,7 +10,7 @@ build-backend = "flit_core.buildapi"
 name = "ehist"
 requires-python = "~=3.8"
 authors = [{name = "Kevin Meagher"}]
-license = {file = "LICENSE"}
+license = {file = "LICENSES/BSD-2-Clause.txt"}
 classifiers = [
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Development Status :: 4 - Beta",
