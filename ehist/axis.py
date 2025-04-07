@@ -154,7 +154,7 @@ class ZenithAxis:
     def bin_spacing(self, points, bins, span):
         if span is None:
             span = [np.min(points), np.max(points)]
-        # coerse the values to common edges
+        # coerce the values to common edges
         if span[0] < 0.1:  # noqa: PLR2004
             span[0] = 0
         if span[1] >= np.pi / 2 - 0.1 and span[1] <= np.pi / 2:

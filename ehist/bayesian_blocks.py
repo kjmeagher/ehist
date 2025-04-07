@@ -249,7 +249,7 @@ class FitnessFunc:
             x += np.zeros_like(t)
 
             if len(unq_t) != len(t):
-                raise ValueError("Repeated values in t not supported when " "x is specified")
+                raise ValueError("Repeated values in t not supported when x is specified")
             t = unq_t
             x = x[unq_ind]
 
@@ -292,7 +292,7 @@ class FitnessFunc:
             return self.p0_prior(N)
         else:
             raise ValueError(
-                "``ncp_prior`` cannot be computed as neither " "``gamma`` nor ``p0`` is defined.",
+                "``ncp_prior`` cannot be computed as neither ``gamma`` nor ``p0`` is defined.",
             )
 
     def fit(self, t, x=None, sigma=None):
@@ -465,7 +465,7 @@ class RegularEvents(FitnessFunc):
 
         eps = 1e-8
         if np.any(N_over_M > 1 + eps):
-            warnings.warn("regular events: N/M > 1.  " "Is the time step correct?")
+            warnings.warn("regular events: N/M > 1.  Is the time step correct?")
 
         one_m_NM = 1 - N_over_M
         N_over_M[N_over_M <= 0] = 1
