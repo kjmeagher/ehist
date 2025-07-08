@@ -45,6 +45,7 @@ import warnings
 from inspect import signature
 
 import numpy as np
+from scipy import optimize, special
 
 # TODO: implement other fitness functions from appendix B of Scargle 2012  # noqa: FIX002, TD002, TD003
 
@@ -673,7 +674,6 @@ def knuth_bin_width(data, return_bins=False, quiet=True):
     histogram.
     """
     # import here because of optional scipy dependency
-    from scipy import optimize
 
     knuthF = _KnuthF(data)
     dx0, bins0 = freedman_bin_width(data, True)
@@ -715,11 +715,6 @@ class _KnuthF:
             raise ValueError("data should be 1-dimensional")
         self.data.sort()
         self.n = self.data.size
-
-        # import here rather than globally: scipy is an optional dependency.
-        # Note that scipy is imported in the function which calls this,
-        # so there shouldn't be any issue importing here.
-        from scipy import special
 
         # create a reference to gammaln to use in self.eval()
         self.gammaln = special.gammaln
