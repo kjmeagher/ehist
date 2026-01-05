@@ -738,7 +738,7 @@ class _KnuthF:
             evaluation of the negative Knuth likelihood function:
             smaller values indicate a better fit.
         """
-        M = int(M)
+        M = M.item()
 
         if M <= 0:
             return np.inf
