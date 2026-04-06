@@ -146,14 +146,14 @@ class HorizontalPlot:
         else:
             assert self.rows == len(col)
 
-        if t in [float]:
+        if t is float:
             a = np.log10(max(np.abs(col))) > 5  # noqa: PLR2004
             b = min(np.abs(col)) != 0
             c = np.log10(min(np.abs(col[col != 0]))) < -2  # noqa: PLR2004
             fmt = "{:7.2e}" if a or (b and c) else "{:0.2f}"
             c = [fmt.format(r) for r in col]
             align = ">"
-        elif t in [int]:
+        elif t is int:
             align = ">"
             c = [str(r) for r in col]
         else:
