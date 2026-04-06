@@ -206,7 +206,7 @@ def auto_axis(points, bins=None, span=None, t=None):
 
     if t in [int, "int"]:
         ax = IntAxis()
-    elif t in ["logint"]:
+    elif t == "logint":
         ax = LogIntAxis()
     elif t in [np.log, np.log10, m.log, m.log10, "log"]:
         ax = LogAxis()
